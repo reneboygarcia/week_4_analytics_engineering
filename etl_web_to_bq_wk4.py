@@ -10,12 +10,14 @@ from prefect_gcp import GcpCredentials
 print("Setup Complete")
 
 # Get data from Github url
+@task(log_prints=True, name="get-data-from-web")
 def get_data_from_web(dataset_url: str):
     filename, _ = urllib.request.urlretrieve(dataset_url)
     return filename
 
 
 # Read and tweak to fix the dtypes of pick-up and drop-off
+@task(log_prints=True, name="read-tweak-df")
 def read_tweak_df(src: str, color: str) -> pd.DataFrame:
     dict_types = {"store_and_fwd_flag": str}
     cols_dict = {
@@ -36,6 +38,7 @@ def read_tweak_df(src: str, color: str) -> pd.DataFrame:
 
 
 # Write DataFrame to BigQuery
+@task(log_prints=True, name="Upload Data frame to BigQuery")
 def write_bq(df: pd.DataFrame, year: int) -> None:
     gcp_credentials_block = GcpCredentials.load("ny-taxi-gcp-creds")
     df.to_gbq(
@@ -49,6 +52,7 @@ def write_bq(df: pd.DataFrame, year: int) -> None:
 
 
 # Define ETL
+@flow(log_prints=True, name="etl-web-to-bq")
 def etl_web_to_bq(year: int, month: int, color: str):
     color = "yellow"
     year = 2019
@@ -66,6 +70,7 @@ def etl_web_to_bq(year: int, month: int, color: str):
 
 
 # Parent ETL
+@flow(log_prints=True, name="parent-etl-web-to-bq")
 def parent_etl_web_to_bq(
     year: int,
     months: list(int) = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
