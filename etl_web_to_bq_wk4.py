@@ -39,10 +39,10 @@ def read_tweak_df(src: str, color: str) -> pd.DataFrame:
 
 # Write DataFrame to BigQuery
 @task(log_prints=True, name="Upload Data frame to BigQuery")
-def write_bq(df: pd.DataFrame, year: int):
+def write_bq(df: pd.DataFrame, year: int, color: str):
     gcp_credentials_block = GcpCredentials.load("ny-taxi-gcp-creds")
     df.to_gbq(
-        destination_table=f"ny_taxi.yellow_tripdata_{year}",
+        destination_table=f"ny_taxi.{color}_tripdata_{year}",
         project_id="dtc-de-2023",
         credentials=gcp_credentials_block.get_credentials_from_service_account(),
         chunksize=500_000,
@@ -65,7 +65,7 @@ def etl_web_to_bq(year: int, month: int, color: str):
     # Read and tweak data frame
     df = read_tweak_df(data_file, color=color)
     # Write to BQ
-    write_bq(df, year)
+    write_bq(df, year, color)
     return
 
 
