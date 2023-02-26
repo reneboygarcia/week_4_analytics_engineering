@@ -10,9 +10,14 @@ from prefect_gcp import GcpCredentials
 print("Setup Complete")
 
 # Get data from Github url
-@task(log_prints=True, name="get-data-from-web", retries=3)
+@task(
+    log_prints=True,
+    name="get-data-from-web",
+    retries=3,
+)
 def get_data_from_web(dataset_url: str):
     filename, _ = urllib.request.urlretrieve(dataset_url)
+    print(f"Downloading from: {dataset_url}")
     return filename
 
 
@@ -47,8 +52,8 @@ def write_bq(df: pd.DataFrame, year: int, color: str):
         credentials=gcp_credentials_block.get_credentials_from_service_account(),
         chunksize=500_000,
         if_exists="append",
+        progress_bar=True,
     )
-
     return
 
 
