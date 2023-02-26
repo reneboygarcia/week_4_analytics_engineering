@@ -19,7 +19,7 @@ bq_git_dep = Deployment.build_from_flow(
     storage=github_block,
 )
 
-print("Successfully deployed NY Taxi Github Block with Docker. Check app.prefect.cloud")
+print("Successfully deployed NY Taxi Github Block. Check app.prefect.cloud")
 
 # execute
 if __name__ == "__main__":

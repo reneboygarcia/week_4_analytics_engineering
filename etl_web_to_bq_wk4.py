@@ -60,9 +60,6 @@ def write_bq(df: pd.DataFrame, year: int, color: str):
 # Define ETL
 @flow(log_prints=True, name=f"etl-web-to-bq")
 def etl_web_to_bq(year: int, month: int, color: str):
-    color = "yellow"
-    year = 2019
-    month = 1
     dataset_url = f"https://github.com/DataTalksClub/nyc-tlc-data/releases/download/{color}/{color}_tripdata_{year}-{month:02}.csv.gz"
 
     # Execution
@@ -93,8 +90,3 @@ def parent_etl_web_to_bq(
 # Run Main
 if __name__ == "__main__":
     parent_etl_web_to_bq()
-
-
-# to deploy
-# --params '{"year":2019, "months": [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1]}'
-# prefect deployment run parent-etl-web-to-bq/ny-taxi-flow-wk4 --params '{"year":2019}'
