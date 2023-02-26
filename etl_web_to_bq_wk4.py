@@ -58,7 +58,7 @@ def write_bq(df: pd.DataFrame, year: int, color: str):
 
 
 # Define ETL
-@flow(log_prints=True, name="etl-web-to-bq")
+@flow(log_prints=True, name=f"etl-web-to-bq")
 def etl_web_to_bq(year: int, month: int, color: str):
     color = "yellow"
     year = 2019
@@ -73,7 +73,7 @@ def etl_web_to_bq(year: int, month: int, color: str):
     # Write to BQ
     write_bq(df, year, color)
     # Comment
-    print(f"Successfully upload: {color}_tripdata_{year}-{month:02} to BigQuery")
+    print(f"Successfully uploaded: {color}_tripdata_{year}-{month:02} to BigQuery")
     return
 
 
