@@ -65,7 +65,7 @@ def etl_web_to_bq(year: int, month: int, color: str):
     # Read and tweak data frame
     df = read_tweak_df(data_file, color=color)
     # Write to BQ
-    write_bq(df)
+    write_bq(df, year)
     return
 
 
