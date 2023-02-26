@@ -77,7 +77,7 @@ def parent_etl_web_to_bq(
     colors: list(str) = ["green", "yellow"],
 ):
     year = 2019
-    for color in colors:
+    for _, color in enumerate(colors):
         for month in months:
             etl_web_to_bq(year, month, color)
 
