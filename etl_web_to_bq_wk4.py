@@ -73,11 +73,11 @@ def etl_web_to_bq(year: int, month: int, color: str):
 @flow(log_prints=True, name="parent-etl-web-to-bq")
 def parent_etl_web_to_bq(
     year: int,
-    months: list(int) = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-    colors: list(str) = ["green", "yellow"],
+    months: list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+    colors: list = ["green", "yellow"],
 ):
     year = 2019
-    for _, color in enumerate(colors):
+    for color in colors:
         for month in months:
             etl_web_to_bq(year, month, color)
 
