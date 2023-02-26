@@ -10,7 +10,7 @@ from prefect_gcp import GcpCredentials
 print("Setup Complete")
 
 # Get data from Github url
-@task(log_prints=True, name="get-data-from-web")
+@task(log_prints=True, name="get-data-from-web", retries=3)
 def get_data_from_web(dataset_url: str):
     filename, _ = urllib.request.urlretrieve(dataset_url)
     return filename
@@ -85,3 +85,8 @@ def parent_etl_web_to_bq(
 # Run Main
 if __name__ == "__main__":
     parent_etl_web_to_bq()
+
+
+# to deploy
+# --params '{"year":2019, "months": [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1]}'
+# prefect deployment run parent-etl-web-to-bq/ny-taxi-flow-wk4 --params '{"year":2019}'
