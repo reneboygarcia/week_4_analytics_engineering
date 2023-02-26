@@ -48,6 +48,7 @@ def write_bq(df: pd.DataFrame, year: int, color: str):
         chunksize=500_000,
         if_exists="append",
     )
+
     return
 
 
@@ -66,6 +67,8 @@ def etl_web_to_bq(year: int, month: int, color: str):
     df = read_tweak_df(data_file, color=color)
     # Write to BQ
     write_bq(df, year, color)
+    # Comment
+    print(f"Successfully upload: {color}_tripdata_{year}-{month:02} to BigQuery")
     return
 
 
