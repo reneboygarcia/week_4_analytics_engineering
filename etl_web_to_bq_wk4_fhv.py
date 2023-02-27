@@ -37,7 +37,12 @@ def read_tweak_df(src: str) -> pd.DataFrame:
     }
 
     df = pd.read_csv(
-        src, parse_dates=[1, 2], dtype=dtype_cols, compression="gzip", engine="c"
+        src,
+        parse_dates=[1, 2],
+        dtype=dtype_cols,
+        compression="gzip",
+        engine="pyarrow",
+        encoding="ISO-8859-1",
     ).rename(columns=cols_dict)
 
     print(f"Data frame number of rows: {df.shape[0]}")
