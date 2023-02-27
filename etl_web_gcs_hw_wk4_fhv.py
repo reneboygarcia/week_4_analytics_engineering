@@ -52,7 +52,7 @@ def write_local(df: pd.DataFrame, year: int, dataset_file: str) -> Path:
 
 # https://app.prefect.cloud/account/975bd9ed-5aef-4c8a-a413-23073fef3acb/workspace/a711abba-f5ae-4b00-9315-34f92f089b77/blocks/catalog
 # Upload local csv.gz file to GCS
-@task(log_prints=True)
+@task(log_prints=True, name="write-gcs", retries=3)
 def write_gcs(path: Path) -> None:
     gcs_block = GcsBucket.load("prefect-gcs-block-ny-taxi")
     gcs_block.upload_from_path(from_path=path, to_path=path)
