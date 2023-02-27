@@ -41,7 +41,6 @@ def read_tweak_df(src: str) -> pd.DataFrame:
         parse_dates=[1, 2],
         dtype=dtype_cols,
         compression="gzip",
-        engine="pyarrow",
         encoding="ISO-8859-1",
     ).rename(columns=cols_dict)
 
