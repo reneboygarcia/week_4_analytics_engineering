@@ -36,18 +36,14 @@ def read_tweak_df(src: str) -> pd.DataFrame:
         "Affiliated_base_number": "string",
     }
 
-    df = (
-        pd.read_csv(
-            src,
-            parse_dates=[1, 2],
-            dtype=dtype_cols,
-            compression="gzip",
-            encoding="ISO-8859-1",
-        )
-        .rename(columns=cols_dict)
-        .dropna(subset=["PUlocationID", "DOlocationID"], inplace=True)
-    )
-
+    df = pd.read_csv(
+        src,
+        parse_dates=[1, 2],
+        dtype=dtype_cols,
+        compression="gzip",
+        encoding="ISO-8859-1",
+    ).rename(columns=cols_dict)
+    df["DOLocationID"] = df["DOLocationID"].astype(float)
     print(f"Data frame number of rows: {df.shape[0]}")
     return df
 
