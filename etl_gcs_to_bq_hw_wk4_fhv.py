@@ -83,7 +83,7 @@ def etl_parent_bq_flow(
     years: list = [2019, 2020],
     months: list[int] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
 ):
-    for years in years:
+    for year in years:
         for month in months:
             etl_gcs_to_bq(year, month)
 
