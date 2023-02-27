@@ -11,7 +11,7 @@ print("Setup Complete")
 
 # Deployment 1
 # Fetch the data from Github url
-@task(log_prints=True, name="fetch-file-dataset_url")
+@task(log_prints=True, name="fetch-file-dataset_url", retries=3)
 def fetch(dataset_url: str):
     filename, _ = urllib.request.urlretrieve(dataset_url)
     return filename
