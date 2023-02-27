@@ -45,7 +45,7 @@ def read_tweak_df(src: str) -> pd.DataFrame:
 
 
 # Write DataFrame to BigQuery
-@task(log_prints=True, name="Upload Data frame to BigQuery")
+@task(log_prints=True, name="Upload Data frame to BigQuery", retries=3)
 def write_bq(df: pd.DataFrame, year: int, month: int):
     gcp_credentials_block = GcpCredentials.load("ny-taxi-gcp-creds")
     # schema = {

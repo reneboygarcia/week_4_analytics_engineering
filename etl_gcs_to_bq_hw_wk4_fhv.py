@@ -8,7 +8,7 @@ print("Setup Complete")
 # Deployment 2
 @task(log_prints=True, name="get-gcp-creds")
 def get_bigquery_client():
-    gcp_creds_block = GcpCredentials.load("prefect-gcs-2023-creds")
+    gcp_creds_block = GcpCredentials.load("ny-taxi-gcp-creds")
     gcp_creds = gcp_creds_block.get_credentials_from_service_account()
     client = bigquery.Client(credentials=gcp_creds)
     return client
@@ -65,7 +65,7 @@ def etl_gcs_to_bq(year: int, month: int):
             bigquery.SchemaField("Affiliated_base_number", "STRING", mode="NULLABLE"),
         ],
     )
-    uri = f"gs://ny_taxi_bucket_de_2023/2019/fhv_tripdata_{year}-{month:02}.parquet"
+    uri = f"gs://ny_taxi_bucket_de_2023/{year}/fhv_tripdata_{year}-{month:02}.parquet"
 
     load_job = client.load_table_from_uri(
         uri, table_id, job_config=job_config
