@@ -43,6 +43,7 @@ def read_tweak_df(src: str) -> pd.DataFrame:
         compression="gzip",
         encoding="ISO-8859-1",
     ).rename(columns=cols_dict)
+
     df["DOLocationID"] = df["DOLocationID"].astype(float)
     print(f"Data frame number of rows: {df.shape[0]}")
     return df
@@ -52,15 +53,15 @@ def read_tweak_df(src: str) -> pd.DataFrame:
 @task(log_prints=True, name="Upload Data frame to BigQuery", retries=3)
 def write_bq(df: pd.DataFrame, year: int, month: int):
     gcp_credentials_block = GcpCredentials.load("ny-taxi-gcp-creds")
-    schema = {
-        "dispatching_base_num": "STRING",
-        "pickup_datetime": "TIMESTAMP",
-        "dropoff_datetime": "TIMESTAMP",
-        "PUlocationID": "FLOAT",
-        "DOlocationID": "FLOAT",
-        "SR_Flag": "FLOAT",
-        "Affiliated_base_number": "STRING",
-    }
+    # schema = {
+    #     "dispatching_base_num": "STRING",
+    #     "pickup_datetime": "TIMESTAMP",
+    #     "dropoff_datetime": "TIMESTAMP",
+    #     "PUlocationID": "FLOAT",
+    #     "DOlocationID": "FLOAT",
+    #     "SR_Flag": "FLOAT",
+    #     "Affiliated_base_number": "STRING",
+    # }
     df.to_gbq(
         destination_table=f"ny_taxi.fhv_tripdata_2019_2020",
         project_id="dtc-de-2023",
@@ -68,7 +69,6 @@ def write_bq(df: pd.DataFrame, year: int, month: int):
         chunksize=500_000,
         if_exists="append",
         progress_bar=True,
-        table_schema=schema,
     )
     print(f"Successfully uploaded: fhv_tripdata_{year}-{month:02} to BigQuery")
     return
