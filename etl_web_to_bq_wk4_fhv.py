@@ -45,7 +45,7 @@ def read_tweak_df(src: str) -> pd.DataFrame:
             encoding="ISO-8859-1",
         )
         .rename(columns=cols_dict)
-        .dropna(subset=["PUlocationID", "DOlocationID"])
+        .dropna(subset=["PUlocationID", "DOlocationID"], axis="index")
     )
 
     print(f"Data frame number of rows: {df.shape[0]}")
