@@ -19,11 +19,12 @@ def deduplicate_data(year: int):
 
     client = get_bigquery_client()
     # this will remove the duplicates
-    query_dedup = f"CREATE OR REPLACE TABLE \
-                        `dtc-de-2023.ny_taxi.fhv_tripdata_2019_2020`  AS ( \
-                            SELECT DISTINCT * \
-                            FROM `dtc-de-2023.ny_taxi.ny_taxi_tripdata_2019_2020` \
-                            )"
+    query_dedup = """CREATE OR REPLACE TABLE 
+                        `dtc-de-2023.ny_taxi.fhv_tripdata_2019_2020` AS ( 
+                            SELECT DISTINCT * 
+                            FROM  `dtc-de-2023.ny_taxi.ny_taxi_tripdata_2019_2020` 
+                        )
+                    """
 
     # limit query to 10GB
     safe_config = bigquery.QueryJobConfig(maximum_bytes_billed=10**10)
