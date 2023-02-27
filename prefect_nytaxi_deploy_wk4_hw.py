@@ -26,5 +26,5 @@ if __name__ == "__main__":
     bq_git_dep.apply()
 
 # to deploy
-# --params '{"year":2019, "months": [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1], "colors": ["yellow", "green"]}'
-# prefect deployment run parent-etl-web-to-bq/ny-taxi-flow-wk4 --params '{"year":2020, "months": [4, 5, 6, 7, 8, 9, 10, 11, 12, 2, 3, 1], "colors": ["yellow", "green"]}'
+# prefect deployment run parent-etl-web-to-bq/ny-taxi-flow-wk4-hw --params '{"years":[2019, 2020], "months": [4, 5, 6, 7, 8, 9, 10, 11, 12, 2, 3, 1]}'
+# prefect deployment run parent-etl-web-to-bq/ny-taxi-flow-wk4-hw --params '{"years":[2020], "months": [7, 8, 9, 10, 11, 12, 2, 3, 1]}'
