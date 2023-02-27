@@ -22,38 +22,40 @@ def get_data_from_web(dataset_url: str):
 
 # Read and tweak to fix the dtypes of pick-up and drop-off
 @task(log_prints=True, name="read-tweak-df")
-def read_tweak_df(src: str, color: str) -> pd.DataFrame:
-    dict_types = {"store_and_fwd_flag": str}
+def read_tweak_df(src: str) -> pd.DataFrame:
     cols_dict = {
-        "tpep_pickup_datetime": "pickup_datetime",
-        "tpep_dropoff_datetime": "dropoff_datetime",
-        "lpep_pickup_datetime": "pickup_datetime",
-        "lpep_dropoff_datetime": "dropoff_datetime",
+        "pickup_datetime": "pickup_datetime",
+        "dropOff_datetime": "dropoff_datetime",
     }
 
-    df = (
-        pd.read_csv(src, parse_dates=[1, 2], dtype=dict_types, compression="gzip")
-        .assign(category=color)
-        .rename(columns=cols_dict)
-        .fillna(value={"passenger_count": 0})
-    )
+    dtype_cols = {
+        "dispatching_base_num": "string",
+        "PUlocationID": "float64",
+        "DOlocationID": "float64",
+        "SR_Flag": "float64",
+        "Affiliated_base_number": "string",
+    }
+
+    df = pd.read_csv(
+        src, parse_dates=[1, 2], dtype=dtype_cols, compression="gzip"
+    ).rename(columns=cols_dict)
     print(f"Data frame number of rows: {df.shape[0]}")
     return df
 
 
 # Write DataFrame to BigQuery
 @task(log_prints=True, name="Upload Data frame to BigQuery")
-def write_bq(df: pd.DataFrame, year: int, month: int, color: str):
+def write_bq(df: pd.DataFrame, year: int, month: int):
     gcp_credentials_block = GcpCredentials.load("ny-taxi-gcp-creds")
     df.to_gbq(
-        destination_table=f"ny_taxi.{color}_tripdata_{year}",
+        destination_table=f"ny_taxi.fhv_tripdata_2019_2020",
         project_id="dtc-de-2023",
         credentials=gcp_credentials_block.get_credentials_from_service_account(),
         chunksize=500_000,
         if_exists="append",
         progress_bar=True,
     )
-    print(f"Successfully uploaded: {color}_tripdata_{year}-{month:02} to BigQuery")
+    print(f"Successfully uploaded: fhv_tripdata_{year}-{month:02} to BigQuery")
     return
 
 
@@ -66,14 +68,14 @@ def get_bigquery_client():
 
 
 @flow(log_prints=True, name="Removing Duplicates")
-def deduplicate_data(color: str, year: int):
+def deduplicate_data(year: int):
 
     client = get_bigquery_client()
     # this will remove the duplicates
     query_dedup = f"CREATE OR REPLACE TABLE \
-                        `dtc-de-2023.ny_taxi.{color}_tripdata_{year}`  AS ( \
+                        `dtc-de-2023.ny_taxi.fhv_tripdata_{year}`  AS ( \
                             SELECT DISTINCT * \
-                            FROM `dtc-de-2023.ny_taxi.{color}_tripdata_{year}_{year}` \
+                            FROM `dtc-de-2023.ny_taxi.fhv_tripdata_{year}` \
                             )"
 
     # limit query to 10GB
@@ -95,36 +97,34 @@ def deduplicate_data(color: str, year: int):
 
 # Define ETL
 @flow(log_prints=True, name=f"etl-web-to-bq")
-def etl_web_to_bq(year: int, month: int, color: str):
-    dataset_url = f"https://github.com/DataTalksClub/nyc-tlc-data/releases/download/{color}/{color}_tripdata_{year}-{month:02}.csv.gz"
+def etl_web_to_bq(year: int, month: int):
+    dataset_url = f"https://github.com/DataTalksClub/nyc-tlc-data/releases/download/fhv/fhv_tripdata_{year}-{month:02}.csv.gz"
 
     # Execution
     # Extract data from web
     data_file = get_data_from_web(dataset_url)
     # Read and tweak data frame
-    df = read_tweak_df(data_file, color=color)
+    df = read_tweak_df(data_file)
     # Write to BQ
-    write_bq(df, year, month, color)
+    write_bq(df, year, month)
     # Removing Duplicates
-    deduplicate_data(color, year)
+    deduplicate_data(year)
     return
 
 
 # Parent ETL
 @flow(log_prints=True, name="parent-etl-web-to-bq")
 def parent_etl_web_to_bq(
-    year: int,
-    months: list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-    colors: list = ["green", "yellow"],
+    years: list = [2019, 2020], months: list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 ):
-    for color in colors:
+    for year in years:
         for month in months:
-            etl_web_to_bq(year, month, color)
+            etl_web_to_bq(year, month)
 
 
 # Run Main
 if __name__ == "__main__":
-    year = 2020
+    year = [2019, 2020]
     months = [4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3]
-    colors = ["green", "yellow"]
-    parent_etl_web_to_bq(year, months, colors)
+
+    parent_etl_web_to_bq(year, months)
