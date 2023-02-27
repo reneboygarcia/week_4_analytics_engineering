@@ -17,7 +17,6 @@ bq_git_dep = Deployment.build_from_flow(
     flow=parent_etl_web_to_bq,
     name="ny-taxi-flow-wk4",
     storage=github_block,
-    infrastructure=docker_block,
 )
 
 print("Successfully deployed NY Taxi Github Block. Check app.prefect.cloud")
