@@ -30,15 +30,16 @@ def read_tweak_df(src: str) -> pd.DataFrame:
 
     dtype_cols = {
         "dispatching_base_num": "string",
-        "PUlocationID": "int64",
-        "DOlocationID": "int64",
+        "PUlocationID": "float64",
+        "DOlocationID": "float64",
         "SR_Flag": "float64",
         "Affiliated_base_number": "string",
     }
 
     df = pd.read_csv(
-        src, parse_dates=[1, 2], dtype=dtype_cols, compression="gzip", engine="python"
+        src, parse_dates=[1, 2], dtype=dtype_cols, compression="gzip", engine="C"
     ).rename(columns=cols_dict)
+
     print(f"Data frame number of rows: {df.shape[0]}")
     return df
 
