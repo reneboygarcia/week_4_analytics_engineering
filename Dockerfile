@@ -6,8 +6,11 @@ COPY docker_env_req.txt .
 
 # Setup the env packages requirement 
 RUN pip install -r docker_env_req.txt --trusted-host pypi.python.org --no-cache-dir
-RUN prefect agent start -q default --api 'https://api.prefect.cloud/api/accounts/975bd9ed-5aef-4c8a-a413-23073fef3acb/workspaces/a711abba-f5ae-4b00-9315-34f92f089b77'
 
+ENTRYPOINT [ "prefect", "agent", "start", "-q", "default", "--api",  ]
+CMD ["start"]
+
+ENV PREFECT_API_URL="https://api.prefect.cloud/api/accounts/975bd9ed-5aef-4c8a-a413-23073fef3acb/workspaces/a711abba-f5ae-4b00-9315-34f92f089b77"
 
 ## https://datatalks-club.slack.com/archives/C01FABYF2RG/p1674907027290529
 

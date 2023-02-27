@@ -17,6 +17,7 @@ bq_git_dep = Deployment.build_from_flow(
     flow=parent_etl_web_to_bq,
     name="ny-taxi-flow-wk4",
     storage=github_block,
+    infrastructure=docker_block,
 )
 
 print("Successfully deployed NY Taxi Github Block. Check app.prefect.cloud")
@@ -27,4 +28,4 @@ if __name__ == "__main__":
 
 # to deploy
 # --params '{"year":2019, "months": [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1], "colors": ["yellow", "green"]}'
-# prefect deployment run parent-etl-web-to-bq/ny-taxi-flow-wk4 --params '{"year":2020, "months": [4], "colors": ["yellow", "green"]}'
+# prefect deployment run parent-etl-web-to-bq/ny-taxi-flow-wk4 --params '{"year":2020, "months": [4, 5, 6, 7, 8, 9, 10, 11, 12, 2, 3, 1], "colors": ["yellow", "green"]}'

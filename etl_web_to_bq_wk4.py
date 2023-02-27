@@ -56,12 +56,14 @@ def write_bq(df: pd.DataFrame, year: int, month: int, color: str):
     print(f"Successfully uploaded: {color}_tripdata_{year}-{month:02} to BigQuery")
     return
 
+
 @task(log_prints=True, name="get-gcp-creds")
 def get_bigquery_client():
     gcp_creds_block = GcpCredentials.load("prefect-gcs-2023-creds")
     gcp_creds = gcp_creds_block.get_credentials_from_service_account()
     client = bigquery.Client(credentials=gcp_creds)
     return client
+
 
 @task(log_prints=True, name="Removing Duplicates")
 def deduplicate_data(color: str, year: int):
@@ -104,7 +106,7 @@ def etl_web_to_bq(year: int, month: int, color: str):
     # Write to BQ
     write_bq(df, year, month, color)
     # Removing Duplicates
-    deduplicate_data(color: str, year: int)
+    deduplicate_data(color, year)
     return
 
 
