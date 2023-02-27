@@ -37,10 +37,8 @@ def read_tweak_df(src: str) -> pd.DataFrame:
     }
 
     df = pd.read_csv(
-        src, parse_dates=[1, 2], dtype=dtype_cols, compression="gzip"
+        src, parse_dates=[1, 2], dtype=dtype_cols, compression="gzip", engine="pyarrow"
     ).rename(columns=cols_dict)
-    df["PUlocationID"] = df["PUlocationID"].astype(float)
-    df["DOlocationID"] = df["DOlocationID"].astype(float)
     print(f"Data frame number of rows: {df.shape[0]}")
     return df
 
