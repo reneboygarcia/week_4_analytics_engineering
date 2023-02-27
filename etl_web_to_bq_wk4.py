@@ -127,4 +127,4 @@ if __name__ == "__main__":
     year = 2020
     months = [4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3]
     colors = ["green", "yellow"]
-    parent_etl_web_to_bq()
+    parent_etl_web_to_bq(year, months, colors)
