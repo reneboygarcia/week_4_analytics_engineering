@@ -47,6 +47,15 @@ def read_tweak_df(src: str) -> pd.DataFrame:
 @task(log_prints=True, name="Upload Data frame to BigQuery")
 def write_bq(df: pd.DataFrame, year: int, month: int):
     gcp_credentials_block = GcpCredentials.load("ny-taxi-gcp-creds")
+    schema = {
+        "dispatching_base_num": "STRING",
+        "pickup_datetime": "TIMESTAMP",
+        "dropoff_datetime": "TIMESTAMP",
+        "PUlocationID": "FLOAT",
+        "DOlocationID": "FLOAT",
+        "SR_Flag": "FLOAT",
+        "Affiliated_base_number": "STRING",
+    }
     df.to_gbq(
         destination_table=f"ny_taxi.fhv_tripdata_2019_2020",
         project_id="dtc-de-2023",
@@ -54,6 +63,7 @@ def write_bq(df: pd.DataFrame, year: int, month: int):
         chunksize=500_000,
         if_exists="append",
         progress_bar=True,
+        table_schema=schema,
     )
     print(f"Successfully uploaded: fhv_tripdata_{year}-{month:02} to BigQuery")
     return
@@ -73,9 +83,9 @@ def deduplicate_data(year: int):
     client = get_bigquery_client()
     # this will remove the duplicates
     query_dedup = f"CREATE OR REPLACE TABLE \
-                        `dtc-de-2023.ny_taxi.fhv_tripdata_{year}`  AS ( \
+                        `dtc-de-2023.ny_taxi.fhv_tripdata_2019_2020`  AS ( \
                             SELECT DISTINCT * \
-                            FROM `dtc-de-2023.ny_taxi.fhv_tripdata_{year}` \
+                            FROM `dtc-de-2023.ny_taxi.fhv_tripdata_2019_2020` \
                             )"
 
     # limit query to 10GB
