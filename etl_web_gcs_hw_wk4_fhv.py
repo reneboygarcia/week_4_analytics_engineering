@@ -27,7 +27,13 @@ def read_tweak_df(src: str) -> pd.DataFrame:
         "SR_Flag": "float64",
         "Affiliated_base_number": "string",
     }
-    df = pd.read_csv(src, parse_dates=[1, 2], dtype=dtype_cols, compression="gzip")
+    df = pd.read_csv(
+        src,
+        parse_dates=[1, 2],
+        dtype=dtype_cols,
+        compression="gzip",
+        encoding="ISO-8859-1",
+    )
     return df
 
 
