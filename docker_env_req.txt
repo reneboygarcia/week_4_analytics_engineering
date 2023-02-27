@@ -1,0 +1,14 @@
+# instructions
+
+# create a new environment 
+    # conda create -n [env_name] python=3.9
+# activate env_name
+    # conda activate [env_name]
+# install the packages
+    # pip install -r [file_name].txt
+# packages
+pandas==1.5.2
+prefect-gcp[cloud_storage]==0.2.3
+protobuf==4.21.11
+pyarrow==10.0.1
+pandas-gbq==0.19.1
