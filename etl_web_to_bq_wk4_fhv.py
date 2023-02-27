@@ -36,9 +36,11 @@ def read_tweak_df(src: str) -> pd.DataFrame:
         "Affiliated_base_number": "string",
     }
 
-    df = pd.read_csv(
-        src, parse_dates=[1, 2], dtype=dtype_cols, compression="gzip"
-    ).rename(columns=cols_dict)
+    df = (
+        pd.read_csv(src, parse_dates=[1, 2], dtype=dtype_cols, compression="gzip")
+        .rename(columns=cols_dict)
+        .astype({"PUlocationID": "float64", "DOlocationID": "float64"})
+    )
     print(f"Data frame number of rows: {df.shape[0]}")
     return df
 
