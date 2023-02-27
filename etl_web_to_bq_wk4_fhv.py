@@ -124,7 +124,7 @@ def parent_etl_web_to_bq(
 
 # Run Main
 if __name__ == "__main__":
-    year = [2019, 2020]
+    years = [2019, 2020]
     months = [4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3]
 
-    parent_etl_web_to_bq(year, months)
+    parent_etl_web_to_bq(years, months)
