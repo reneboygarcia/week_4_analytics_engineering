@@ -59,7 +59,7 @@ def write_bq(df: pd.DataFrame, year: int, month: int, color: str):
 
 @task(log_prints=True, name="get-gcp-creds")
 def get_bigquery_client():
-    gcp_creds_block = GcpCredentials.load("prefect-gcs-2023-creds")
+    gcp_creds_block = GcpCredentials.load("ny-taxi-gcp-creds")
     gcp_creds = gcp_creds_block.get_credentials_from_service_account()
     client = bigquery.Client(credentials=gcp_creds)
     return client
@@ -73,7 +73,7 @@ def deduplicate_data(color: str, year: int):
     query_dedup = f"CREATE OR REPLACE TABLE \
                         `dtc-de-2023.ny_taxi.{color}_tripdata_{year}`  AS ( \
                             SELECT DISTINCT * \
-                            FROM `dtc-de-2023.ny_taxi.{color}_tripdata_{year}` \
+                            FROM `dtc-de-2023.ny_taxi.{color}_tripdata_{year}_{year}` \
                             )"
 
     # limit query to 10GB
