@@ -30,8 +30,6 @@ def read_tweak_df(src: str) -> pd.DataFrame:
 
     dtype_cols = {
         "dispatching_base_num": "string",
-        "PUlocationID": "float64",
-        "DOlocationID": "float64",
         "SR_Flag": "float64",
         "Affiliated_base_number": "string",
     }
