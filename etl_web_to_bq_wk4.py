@@ -32,7 +32,13 @@ def read_tweak_df(src: str, color: str) -> pd.DataFrame:
     }
 
     df = (
-        pd.read_csv(src, parse_dates=[1, 2], dtype=dict_types, compression="gzip")
+        pd.read_csv(
+            src,
+            parse_dates=[1, 2],
+            dtype=dict_types,
+            compression="gzip",
+            encoding="ISO-8859-1",
+        )
         .assign(category=color)
         .rename(columns=cols_dict)
         .fillna(value={"passenger_count": 0})

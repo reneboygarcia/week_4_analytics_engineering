@@ -23,4 +23,4 @@ if __name__ == "__main__":
     gsc_git_dep.apply()
 
 # to deploy
-# prefect deployment run etl-parent-to-bq/ny-taxi-flow-bq-hw-wk3 --params '{"year":2019, "months": [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1]}'
+# prefect deployment run etl-parent-to-bq/ny-taxi-flow-bq-hw-wk4 --params '{"years":[2020], "months": [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1]}'
