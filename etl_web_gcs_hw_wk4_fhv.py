@@ -3,7 +3,9 @@ import os
 from datetime import datetime
 from pathlib import Path
 import urllib.request
-import pandas as pd
+
+# import pandas as pd
+import modin.pandas as pd
 from prefect import task, flow
 from prefect_gcp.cloud_storage import GcsBucket
 
@@ -43,7 +45,8 @@ def write_local(df: pd.DataFrame, year: int, dataset_file: str) -> Path:
     directory = Path(f"{year}")
     path_name = directory / f"{dataset_file}.parquet"
     try:
-        os.makedirs(directory, exist_ok=True)
+        directory.mkdir()
+        # os.makedirs(directory, exist_ok=True)
         df.to_parquet(path_name, compression="gzip", index=False)
     except OSError as error:
         print(error)
@@ -60,12 +63,14 @@ def write_gcs(path: Path) -> None:
     return
 
 
-# Delete file after uploads
+# Delete file and then delete directory after uploads
 @task(log_prints=True, name="deduplicate-local-data")
 def deduplicate(path: Path) -> None:
     try:
-        os.remove(path)
-        os.rmdir(path)
+        path.unlink()
+        full_path = path.resolve()
+        full_path.parent.rmdir()
+        # os.rmdir(path)
         print("Successfully deleted directory and local files...hep hep hooray")
     except OSError as error:
         print(f"The system cannot find the file specified: {error}")
@@ -108,6 +113,6 @@ def etl_parent_web_gcs(years: list, months: list):
 
 # Run main
 if __name__ == "__main__":
-    years = [2019, 2020]
-    months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+    years = [2021]
+    months = [1]
     etl_parent_web_gcs(years, months)

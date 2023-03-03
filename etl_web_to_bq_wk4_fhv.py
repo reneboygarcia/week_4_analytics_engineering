@@ -1,7 +1,9 @@
 # imports
 import typing
 import urllib.request
-import pandas as pd
+
+# import pandas as pd
+import modin.pandas as pd
 from prefect import task, flow
 from prefect_gcp import GcpCredentials
 from google.cloud import bigquery
